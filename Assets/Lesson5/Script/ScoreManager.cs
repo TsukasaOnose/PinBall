@@ -5,29 +5,28 @@ using UnityEngine.UI;
 
 public class ScoreManager : MonoBehaviour
 {
-    private Text scoreText;
-    private int oldScore;
+    //スコアの初期値
+    private int score = 0;
+    private GameObject scoreText;
 
     // Start is called before the first frame update
     void Start()
     {
-        scoreText = GetComponent<Text>();
-        if (scoreText != null && GManager.instance != null)
-        {
-            scoreText.text = GManager.instance.score.ToString();
-        }
+        this.scoreText = GameObject.Find("ScoreText");
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (scoreText != null && GManager.instance != null)
-        {
-            if (oldScore != GManager.instance.score)
-            {
-                scoreText.text = GManager.instance.score.ToString();
-                oldScore = GManager.instance.score;
-            }
-        }
+        
+    }
+
+    //スコアに加算していく関数を作成
+    public void AddScore(int additionValue)
+    {
+        //「amount」に入ってくる数値分加算していく
+        score += additionValue;
+        //スコアのテキストを上書きする
+        this.gameObject.GetComponent<Text>().text = "Score " + score;
     }
 }
