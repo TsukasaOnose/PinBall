@@ -10,6 +10,8 @@ public class TouchController : MonoBehaviour
     private float defaultAngle = 20;
     //弾いた時の傾き
     private float flickAngle = -20;
+    //タッチID
+    int? touchId = null;
 
     // Start is called before the first frame update
     void Start()
@@ -37,28 +39,33 @@ public class TouchController : MonoBehaviour
         {
             //画面に触れている部分の情報が入ったインスタンスを取得
             Touch touch = Input.GetTouch(i);
-
-                //画面左側をタップした時、左フリッパーを動かす
+            {
+                //画面左側をタップした時、タッチIDを割り振り、左フリッパーを動かす
                 if (touch.phase == TouchPhase.Began && touch.position.x <= Screen.width / 2 && tag == "LeftFripperTag")
                 {
+                    touchId = Input.touches[i].fingerId;
                     SetAngle(flickAngle);
                 }
 
-                //画面右側をタップした時、右フリッパーを動かす
+                //画面右側をタップした時、タッチIDを割り振り、右フリッパーを動かす
                 if (touch.phase == TouchPhase.Began && touch.position.x >= Screen.width / 2 && tag == "RightFripperTag")
                 {
+                    touchId = Input.touches[i].fingerId;
                     SetAngle(flickAngle);
                 }
 
-                //画面から指を離した時、フリッパーを元の位置に動かす
-                if (touch.phase == TouchPhase.Ended && touch.position.x <= Screen.width / 2 && tag == "LeftFripperTag")
+                //画面から指を離した時、割り振られたIDのフリッパーを元の位置に動かす
+                if (Input.touches[i].fingerId == touchId && touch.phase == TouchPhase.Ended && tag == "LeftFripperTag")
                 {
                     SetAngle(defaultAngle);
+                    touchId = null;
                 }
-                if (touch.phase == TouchPhase.Ended && touch.position.x >= Screen.width / 2 && tag == "RightFripperTag")
+                if (Input.touches[i].fingerId == touchId && touch.phase == TouchPhase.Ended && tag == "RightFripperTag")
                 {
                     SetAngle(defaultAngle);
+                    touchId = null;
                 }
+            }
         }
     }
 
